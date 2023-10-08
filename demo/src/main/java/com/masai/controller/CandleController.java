@@ -14,12 +14,15 @@ import com.masai.service.CandleInterface;
 
 import java.util.List;
 
+
+
 @RestController
 @RequestMapping("/candles")
 public class CandleController {
     @Autowired
     private CandleInterface candleService;
 
+ // Endpoint to add candle data to the database.
     @GetMapping("/add")
     public ResponseEntity<String> addCandleData() {
         try {
@@ -29,6 +32,8 @@ public class CandleController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+    
+    // Endpoint to get the first Opening Range Breakout (ORB) candle.
 
     @GetMapping("/get-first-orb-candle")
     public ResponseEntity<String> getFirstOrbCandle(Integer time) {
@@ -39,6 +44,8 @@ public class CandleController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+    
+ // Endpoint to get candles for a new time interval.
 
     @GetMapping("/get-candles-new-interval")
     public ResponseEntity<List<Candle>> getCandlesNewInterval(Integer time) {

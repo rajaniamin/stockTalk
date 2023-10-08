@@ -24,6 +24,13 @@ import com.masai.repo.CandleRepo;
 public class CandleServiceImpl implements CandleInterface{
 	@Autowired
 	private CandleRepo candleRepository;
+	
+	  /**
+     * Add candle data from a JSON file to the database.
+     *
+     * @return A message indicating the success or failure of data addition.
+     * @throws CandleClassException If there's an issue processing the data.
+     */
 
 	@Override
 	public String addData() throws CandleClassException {
@@ -51,12 +58,25 @@ public class CandleServiceImpl implements CandleInterface{
 	    
 	}
 
-
+	 /**
+     * Retrieve the first and last candles of the day.
+     *
+     * @return A list of candles representing the first and last candles of the day.
+     * @throws InputNotFound If the required input is missing.
+     * */
 	@Override
 	public List<Candle> getCandlesData() throws InputNotFound {
 		return candleRepository.getFirstAndLastCandlesOfTheDay();
 	}
-
+   
+    /**
+     * Find the first Opening Range Breakout (ORB) candle.
+     *
+     * @param time The time interval in minutes.
+     * @return A message indicating the time when the first ORB candle was generated.
+     * @throws CandleClassException If there's an issue processing the data.
+     * @throws InputNotFound       If the required input is missing.
+     */
 	@Override
 	public String getFirstOrbCandleData(Integer time) throws CandleClassException, InputNotFound {
 	    if (time == null) {
@@ -84,7 +104,14 @@ public class CandleServiceImpl implements CandleInterface{
 
 	    throw new CandleClassException("No opening range breakout occurred.");
 	}
-
+    /**
+     * Retrieve candles within a new time interval.
+     *
+     * @param time The time interval in minutes.
+     * @return A list of candles within the specified time interval.
+     * @throws CandleClassException If there's an issue processing the data.
+     * @throws InputNotFound       If the required input is missing.
+     */
 
 	@Override
 	public List<Candle> getCandlesNewInterval(Integer time) throws CandleClassException, InputNotFound {
