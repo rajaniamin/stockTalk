@@ -1,6 +1,5 @@
 package com.masai.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import com.masai.expection.CandleClassException;
@@ -14,9 +13,9 @@ public interface CandleInterface {
 
 	public List<Candle> getCandlesData() throws InputNotFound;
 	
-	public String getFirstOrbCandle(Integer time)throws CandleClassException,InputNotFound;
+	public String getFirstOrbCandleData(Integer time)throws CandleClassException,InputNotFound;
 
-	public List<Candle> getCandlesWithNewInterval(Integer time)throws CandleClassException,InputNotFound;
+	public List<Candle> getCandlesNewInterval(Integer time)throws CandleClassException,InputNotFound;
 
-	public LocalDateTime findORBDateTime(int intervalMinutes)throws CandleClassException;
+	
 }

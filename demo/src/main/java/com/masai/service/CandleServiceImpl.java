@@ -2,6 +2,7 @@ package com.masai.service;
 
 import java.io.InputStream;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -53,26 +54,56 @@ public class CandleServiceImpl implements CandleInterface{
 
 	@Override
 	public List<Candle> getCandlesData() throws InputNotFound {
-		// TODO Auto-generated method stub
-		return null;
+		return candleRepository.getFirstAndLastCandlesOfTheDay();
 	}
 
 	@Override
-	public String getFirstOrbCandle(Integer time) throws CandleClassException, InputNotFound {
-		// TODO Auto-generated method stub
-		return null;
+	public String getFirstOrbCandleData(Integer time) throws CandleClassException, InputNotFound {
+	    if (time == null) {
+	        throw new InputNotFound("Time interval is required.");
+	    }
+	    LocalDateTime startDate = LocalDateTime.now().with(LocalTime.of(9, 15));
+	    LocalDateTime endDate = startDate.plusMinutes(time);
+
+	    List<Candle> candles = candleRepository.findByLastTradeTimeBetween(startDate, endDate);
+
+	    if (candles.isEmpty()) {
+	        throw new CandleClassException("No candles found in the specified interval");
+	    }
+
+	    double openingRangeHigh = candles.stream().mapToDouble(Candle::getHigh).max().orElse(0.0);
+	    double openingRangeLow = candles.stream().mapToDouble(Candle::getLow).min().orElse(0.0);
+
+	    List<Candle> subsequentCandles = candleRepository.findByLastTradeTimeAfter(endDate);
+
+	    for (Candle candle : subsequentCandles) {
+	        if (candle.getClose() > openingRangeHigh || candle.getClose() < openingRangeLow) {
+	            return "First Opening Range Breakout Candle found at: " + candle.getLastTradeTime();
+	        }
+	    }
+
+	    throw new CandleClassException("No opening range breakout occurred.");
 	}
 
-	@Override
-	public List<Candle> getCandlesWithNewInterval(Integer time) throws CandleClassException, InputNotFound {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
-	public LocalDateTime findORBDateTime(int intervalMinutes) throws CandleClassException {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Candle> getCandlesNewInterval(Integer time) throws CandleClassException, InputNotFound {
+	    if (time == null) {
+	        throw new InputNotFound("Time interval is required.");
+	    }
+
+	    LocalDateTime currentDateTime = LocalDateTime.now();
+	    LocalDateTime newIntervalStart = currentDateTime.minusMinutes(time);
+	    List<Candle> candles = candleRepository.findByLastTradeTimeBetween(newIntervalStart, currentDateTime);
+
+	    if (candles.isEmpty()) {
+	        throw new CandleClassException("No candles found in the specified interval");
+	    }
+
+	    return candles;
 	}
+
+
+	
 
 }

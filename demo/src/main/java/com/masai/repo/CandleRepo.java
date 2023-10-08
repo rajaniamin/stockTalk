@@ -10,6 +10,7 @@ import com.masai.model.Candle;
 public interface CandleRepo extends JpaRepository<Candle, Integer>{
 	public List<Candle> getFirstAndLastCandlesOfTheDay();
 	List<Candle> findByLastTradeTimeBetween(LocalDateTime startDate, LocalDateTime endDate);
+	public List<Candle> findByLastTradeTimeAfter(LocalDateTime endDate);
 
 }
 	
